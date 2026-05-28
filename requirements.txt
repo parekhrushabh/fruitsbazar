@@ -1,0 +1,26 @@
+# ============================================================
+#   Fruit Bazar - Django E-Commerce Project
+#   Requirements File
+#   Generated: 2026-05-28
+# ============================================================
+
+# ── Core Framework ──────────────────────────────────────────
+Django>=4.2,<5.0
+
+# ── Image Handling ───────────────────────────────────────────
+Pillow>=10.0.0
+
+# ── Payment Gateway ──────────────────────────────────────────
+razorpay>=1.4.1
+
+# ── Database ─────────────────────────────────────────────────
+# SQLite3 is included with Python (no separate package needed)
+
+# ── Optional: Environment Variable Management ─────────────────
+python-dotenv>=1.0.0
+
+# ── Optional: Production Server ───────────────────────────────
+gunicorn>=21.2.0
+
+# ── Optional: Static Files (Production) ───────────────────────
+whitenoise>=6.6.0
