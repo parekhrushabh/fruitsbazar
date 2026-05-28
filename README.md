@@ -302,8 +302,8 @@ This project integrates **Razorpay** for card payments.
 ## 👨‍💻 Author
 
 **Your Name**  
-📧 youremail@example.com  
-🔗 [GitHub Profile](https://github.com/yourusername)
+📧 parekh1224@gmail.com  
+🔗 [GitHub Profile](https://github.com/parekhrushabh/fruitsbazar)
 
 ---
 
