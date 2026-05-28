@@ -1,0 +1,253 @@
+{% extends 'user_app/master.html' %}
+{% load static%}
+{% block content %}
+
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<form method="GET" action="{% url 'shop_view' %}">
+								<input type="text" name="search" placeholder="Search fruits...">
+								<button type="submit">Search <i class="fas fa-search"></i></button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>See more Details</p>
+						<h1>Single Product</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- single product -->
+	<div class="single-product mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<div class="single-product-img">
+						<!-- Main Image -->
+						<img id="mainImage" src="{{ product.images.first.image.url }}" width="400">
+						<!-- Thumbnail Images -->
+						<div style="display:flex; gap:10px; margin-top:15px;">
+							{% for img in product.images.all %}
+							<img src="{{ img.image.url }}"
+								width="80"
+								class="thumb-img"
+								style="cursor:pointer; border:1px solid #ddd; padding:5px;">
+							{% endfor %}
+						</div>
+					</div>
+					<script>
+					document.querySelectorAll(".thumb-img").forEach(function(img){
+						img.addEventListener("click", function(){
+							document.getElementById("mainImage").src = this.src;
+						});
+					});
+					</script>
+				</div>
+				<div class="col-md-7">
+					<div class="single-product-content">
+						<h3>{{ product.name }}</h3>
+						<p class="single-product-pricing">
+							<span>Per {{ product.unit }}</span>₹{{ product.price }}
+						</p>
+						<p>{{ product.description }}</p>
+						<div class="single-product-form">
+							<button class="cart-btn add-to-cart" style="background-color: #F28123; color: white; border-radius: 25px; padding: 10px 30px; border: none; font-weight: 700;" data-id="{{ product.id }}" data-url="{% url 'cart_add' product.id %}">
+								<i class="fas fa-shopping-cart"></i> Add to Cart
+							</button>
+							<p class="mt-3"><strong>Category: </strong>{{ product.category.name }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Review Section -->
+			<div class="row mt-100">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<h3><span class="orange-text">Product</span> Reviews</h3>
+					</div>
+				</div>
+				
+				<div class="col-lg-6">
+					<div class="reviews-list mb-5">
+						{% if reviews %}
+							{% for review in reviews %}
+								<div class="single-review mb-4 p-4 shadow-sm border rounded" style="background: #fdfdfd;">
+									<div class="d-flex justify-content-between align-items-center mb-2">
+										<h5 class="mb-0 fw-bold"><i class="fas fa-user-circle me-2"></i>{{ review.user.username }}</h5>
+										<div class="rating-stars text-warning">
+											{% for i in "12345" %}
+												{% if forloop.counter <= review.rating %}
+													<i class="fas fa-star"></i>
+												{% else %}
+													<i class="far fa-star"></i>
+												{% endif %}
+											{% endfor %}
+										</div>
+									</div>
+									<p class="text-muted small mb-2"><i class="far fa-calendar-alt me-1"></i>{{ review.created_at|date:"M d, Y" }}</p>
+									<p class="mb-0">{{ review.review_text }}</p>
+								</div>
+							{% endfor %}
+						{% else %}
+							<p class="text-muted">No reviews yet. Be the first to review this product!</p>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="col-lg-6">
+					<div class="review-form-wrapper p-5 shadow rounded border bg-white">
+						<h4 class="mb-4 fw-bold">Leave a Review</h4>
+						<form method="POST">
+							{% csrf_token %}
+							<div class="mb-3">
+								<label class="form-label fw-bold">Rating</label>
+								<div class="star-rating">
+									<select name="rating" class="form-select border-orange" required>
+										<option value="5">5 Stars - Excellent</option>
+										<option value="4">4 Stars - Very Good</option>
+										<option value="3">3 Stars - Average</option>
+										<option value="2">2 Stars - Poor</option>
+										<option value="1">1 Star - Very Poor</option>
+									</select>
+								</div>
+							</div>
+							<div class="mb-4">
+								<label class="form-label fw-bold">Your Comment</label>
+								<textarea name="review" class="form-control border-orange" rows="4" placeholder="Share your experience with this fruit..." required></textarea>
+							</div>
+							<button type="submit" class="btn w-100 py-3 fw-bold" style="background: #F28123; color: white; border-radius: 50px;">Submit Review</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end single product -->
+
+	<style>
+		.border-orange:focus {
+			border-color: #F28123 !important;
+			box-shadow: 0 0 0 0.25rem rgba(242, 129, 35, 0.25) !important;
+		}
+		.mt-100 { margin-top: 100px; }
+		.fw-bold { font-weight: 700; }
+	</style>
+
+	<!-- more products -->
+	<!-- <div class="more-products mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="section-title">	
+						<h3><span class="orange-text">Related</span> Products</h3>
+						<p>"Explore more fresh and delicious fruits that complement your choice. Handpicked for quality and taste, our related products make your fruit shopping even more delightful!"</p>
+					</div>
+				</div>
+			</div> -->
+			<!-- <div class="row">
+				<div class="col-lg-4 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="#"><img src="{% static  'user_app/assets/img/products/product-img-1.jpg' %}" alt=""></a>
+						</div>
+						<h3>Strawberry</h3>
+						<p class="product-price"><span>Per Kg</span> 430 </p>
+						<a href="#" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="#"><img src="{% static  'user_app/assets/img/products/product-img-2.jpg' %}" alt=""></a>
+						</div>
+						<h3>BlueBerry</h3>
+						<p class="product-price"><span>Per Kg</span> 1200 </p>
+						<a href="#" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 offset-lg-0 offset-md-3 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="#"><img src="{% static  'user_app/assets/img/products/product-img-3.jpg' %}" alt=""></a>
+						</div>
+						<h3>Lemon</h3>
+						<p class="product-price"><span>Per Kg</span> 120 </p>
+						<a href="#" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="#"><img src="{% static  'user_app/assets/img/products/product-img-4.jpg' %}" alt=""></a>
+						</div>
+						<h3>Kiwi</h3>
+						<p class="product-price"><span>Per Kg</span> 490 </p>
+						<a href="#" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="#"><img src="{% static  'user_app/assets/img/products/product-img-5.jpg' %}" alt=""></a>
+						</div>
+						<h3>Green Apple</h3>
+						<p class="product-price"><span>Per Kg</span> 440 </p>
+						<a href="#" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div> -->
+			</div>
+		</div>
+	</div>
+	<!-- end more products -->
+
+	<!-- logo carousel -->
+	<div class="logo-carousel-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="logo-carousel-inner">
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/1.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/2.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/3.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/4.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/5.png' %}" alt="">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end logo carousel -->
+
+{% endblock %}

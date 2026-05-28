@@ -1,0 +1,151 @@
+{% extends 'user_app/master.html' %}
+{% load static %}
+{% block content %}
+
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Transaction Successful</p>
+                    <h1>Order Invoice</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-100 mb-100">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <div id="invoice-card" class="card shadow-lg border-0 p-5" style="border-radius: 15px;">
+                <div class="card-body">
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <h2 class="text-primary font-weight-bold">FRUIT BAZAR</h2>
+                            <p class="text-muted">Fresh & Organic Fruits</p>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <h4 class="font-weight-bold">INVOICE</h4>
+                            <p class="mb-0"><strong>Order ID:</strong> {{ counter.id }}</p>
+                            <p class="mb-0"><strong>Date:</strong> {{ order.created_at|date:"d M Y" }}</p>
+                            <p class="mb-0"><strong>Transaction ID:</strong> {{ payment.transaction_id }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div class="col-md-6">
+                            <h5 class="font-weight-bold mb-3">Billed To:</h5>
+                            <p class="mb-1">{{ order.full_name }}</p>
+                            <p class="mb-1">{{ order.email }}</p>
+                            <p class="mb-1">{{ order.phone }}</p>
+                            <p class="mb-0">{{ order.address }}, {{ order.city }} - {{ order.zip_code }}</p>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <h5 class="font-weight-bold mb-3">Payment Info:</h5>
+                            <p class="mb-1"><strong>Method:</strong> {{ payment.payment_method }}</p>
+                            <p class="mb-1"><strong>Status:</strong> 
+                                <span class="badge {% if payment.payment_status == 'Success' %}badge-success{% else %}badge-warning{% endif %}">
+                                    {{ payment.payment_status }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr class="bg-light">
+                                    <th>Product</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items.all %}
+                                <tr>
+                                    <td>{{ item.product.name }}</td>
+                                    <td class="text-center">{{ item.quantity }}</td>
+                                    <td class="text-right">₹{{ item.price }}</td>
+                                    <td class="text-right">₹{{ item.total_price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="row justify-content-end">
+                        <div class="col-md-4 text-right">
+                            <p class="d-flex justify-content-between mb-1">
+                                <span>Subtotal:</span>
+                                <span>₹{{ order.subtotal }}</span>
+                            </p>
+                            <p class="d-flex justify-content-between mb-1">
+                                <span>Shipping:</span>
+                                <span>₹{{ order.shipping_cost }}</span>
+                            </p>
+                            <h4 class="d-flex justify-content-between font-weight-bold mt-3 text-primary">
+                                <span>Total Paid:</span>
+                                <span>₹{{ order.total_amount }}</span>
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5 no-print">
+                        <p class="text-muted font-italic mb-4">Thank you for shopping with Fruit Bazar! We hope to see you again soon.</p>
+                        <div class="d-flex justify-content-center align-items-center flex-wrap" style="gap: 15px;">
+                            <button onclick="window.print()" class="boxed-btn border-0 shadow-sm" style="cursor: pointer; background-color: #F28123; border-radius: 50px; padding: 12px 30px; font-weight: bold; transition: 0.3s;">
+                                <i class="fas fa-print mr-2"></i> Print Invoice
+                            </button>
+                            <a href="{% url 'shop_view' %}" class="bordered-btn shadow-sm" style="border-radius: 50px; padding: 12px 30px; font-weight: bold; transition: 0.3s;">
+                                <i class="fas fa-shopping-cart mr-2"></i> Continue Shopping
+                            </a>
+                            <a href="{% url 'index_view' %}" class="boxed-btn border-0 shadow-sm" style="cursor: pointer; background-color: #051922; border-radius: 50px; padding: 12px 30px; font-weight: bold; transition: 0.3s;">
+                                <i class="fas fa-home mr-2"></i> Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .boxed-btn:hover {
+        background-color: #051922 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
+    }
+    .bordered-btn:hover {
+        background-color: #F28123 !important;
+        color: #fff !important;
+        border-color: #F28123 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+    }
+    @media print {
+        .breadcrumb-section, .footer-area, .copyright, .top-header-area, .no-print {
+            display: none !important;
+        }
+        #invoice-card {
+            box-shadow: none !important;
+            padding: 0 !important;
+            border: none !important;
+        }
+        .card-body {
+            padding: 0 !important;
+        }
+        .container {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,975 @@
+{% extends 'user_app/master.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+	/* Modern Premium Styles for User Side Dashboard */
+	:root {
+		--primary-color: #F28123;
+		--primary-hover: #d96f16;
+		--primary-light: #fff5eb;
+		--dark-color: #051923;
+		--text-color: #555555;
+		--bg-light: #fdfdfd;
+		--card-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+		--hover-shadow: 0 15px 40px rgba(242, 129, 35, 0.15);
+		--transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+	}
+
+	/* Animations */
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.animated-fade-in {
+		animation: fadeInUp 0.8s ease-out forwards;
+	}
+
+	/* Hero Section Typography */
+	.hero-text h1 {
+		font-size: 64px !important;
+		font-weight: 850 !important;
+		text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+		letter-spacing: -1.5px !important;
+		line-height: 1.1 !important;
+	}
+
+	.hero-text p.subtitle {
+		text-transform: uppercase !important;
+		font-weight: 800 !important;
+		letter-spacing: 4px !important;
+		color: var(--primary-color) !important;
+		margin-bottom: 15px !important;
+		font-size: 16px !important;
+	}
+
+	.hero-btns a.boxed-btn {
+		background-color: var(--primary-color) !important;
+		border: 2px solid var(--primary-color) !important;
+		border-radius: 50px !important;
+		font-weight: 700 !important;
+		padding: 12px 30px !important;
+		transition: var(--transition-smooth) !important;
+	}
+
+	.hero-btns a.boxed-btn:hover {
+		background-color: transparent !important;
+		color: var(--primary-color) !important;
+		box-shadow: 0 8px 25px rgba(242, 129, 35, 0.45) !important;
+	}
+
+	.hero-btns a.bordered-btn {
+		border-radius: 50px !important;
+		font-weight: 700 !important;
+		padding: 12px 30px !important;
+		transition: var(--transition-smooth) !important;
+	}
+
+	.hero-btns a.bordered-btn:hover {
+		background-color: var(--primary-color) !important;
+		color: white !important;
+		border-color: var(--primary-color) !important;
+		box-shadow: 0 8px 25px rgba(242, 129, 35, 0.25) !important;
+	}
+
+	/* Features List Cards */
+	.features-container {
+		margin-top: -50px;
+		position: relative;
+		z-index: 10;
+	}
+
+	.feature-card {
+		background: #ffffff;
+		padding: 35px 30px;
+		border-radius: 20px;
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+		border: 1px solid rgba(0, 0, 0, 0.02);
+		transition: var(--transition-smooth);
+		height: 100%;
+	}
+
+	.feature-card:hover {
+		transform: translateY(-8px);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+		border-color: rgba(242, 129, 35, 0.2);
+	}
+
+	.feature-icon-box {
+		width: 65px;
+		height: 65px;
+		border-radius: 50%;
+		background: var(--primary-light);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 20px;
+		transition: var(--transition-smooth);
+	}
+
+	.feature-icon-box i {
+		font-size: 26px;
+		color: var(--primary-color);
+		transition: var(--transition-smooth);
+	}
+
+	.feature-card:hover .feature-icon-box {
+		background: var(--primary-color);
+	}
+
+	.feature-card:hover .feature-icon-box i {
+		color: #ffffff;
+		transform: scale(1.1) rotate(5deg);
+	}
+
+	.feature-info h3 {
+		font-size: 19px;
+		font-weight: 800;
+		color: var(--dark-color);
+		margin-bottom: 5px;
+	}
+
+	.feature-info p {
+		margin: 0;
+		font-size: 14px;
+		color: var(--text-color);
+	}
+
+	/* Section Titles */
+	.section-title h3 {
+		font-size: 42px;
+		font-weight: 850;
+		color: var(--dark-color);
+		position: relative;
+		padding-bottom: 18px;
+		margin-bottom: 20px;
+	}
+
+	.section-title h3::after {
+		position: absolute;
+		content: '';
+		left: 50%;
+		bottom: 0;
+		width: 80px;
+		height: 4px;
+		background-color: var(--primary-color);
+		margin-left: -40px;
+		border-radius: 5px;
+	}
+
+	/* Premium Category Card Styling */
+	.category-card {
+		background: #ffffff;
+		border-radius: 24px;
+		overflow: hidden;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+		border: 1px solid rgba(0, 0, 0, 0.03);
+		transition: var(--transition-smooth);
+		padding: 25px;
+		display: block;
+		text-decoration: none !important;
+		height: 100%;
+	}
+
+	.category-card:hover {
+		transform: translateY(-10px);
+		box-shadow: var(--hover-shadow);
+		border-color: rgba(242, 129, 35, 0.25);
+	}
+
+	.category-img-container {
+		width: 100%;
+		height: 150px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 20px;
+		overflow: hidden;
+		border-radius: 16px;
+		background: var(--primary-light);
+		transition: var(--transition-smooth);
+	}
+
+	.category-img-container img {
+		max-height: 85%;
+		max-width: 85%;
+		object-fit: contain;
+		transition: var(--transition-smooth);
+	}
+
+	.category-card:hover .category-img-container img {
+		transform: scale(1.15) rotate(3deg);
+	}
+
+	.category-card h3 {
+		font-size: 20px;
+		font-weight: 800;
+		color: var(--dark-color);
+		margin-bottom: 8px;
+		transition: var(--transition-smooth);
+	}
+
+	.category-card:hover h3 {
+		color: var(--primary-color);
+	}
+
+	.category-card p {
+		font-size: 13px;
+		color: var(--text-color);
+		line-height: 1.5;
+		margin-bottom: 0;
+	}
+
+	/* Premium Product Card Styling */
+	.single-product-item {
+		background: #ffffff;
+		border-radius: 24px !important;
+		padding: 30px 24px !important;
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03) !important;
+		border: 1px solid rgba(0, 0, 0, 0.02) !important;
+		transition: var(--transition-smooth) !important;
+		margin-bottom: 30px !important;
+		height: calc(100% - 30px);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.single-product-item::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 5px;
+		background: linear-gradient(90deg, var(--primary-color), #ffb26b);
+		opacity: 0;
+		transition: var(--transition-smooth);
+	}
+
+	.single-product-item:hover::before {
+		opacity: 1;
+	}
+
+	.single-product-item:hover {
+		transform: translateY(-10px) !important;
+		box-shadow: var(--hover-shadow) !important;
+		border-color: rgba(242, 129, 35, 0.25) !important;
+	}
+
+	.single-product-item .product-image {
+		height: 170px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 22px;
+		overflow: hidden;
+		border-radius: 16px;
+		background: #fafafa;
+		padding: 15px;
+		transition: var(--transition-smooth);
+	}
+
+	.single-product-item .product-image img {
+		max-height: 100%;
+		max-width: 100%;
+		object-fit: contain !important;
+		transition: var(--transition-smooth);
+	}
+
+	.single-product-item:hover .product-image img {
+		transform: scale(1.12);
+	}
+
+	.single-product-item h3 {
+		font-size: 21px;
+		font-weight: 800;
+		color: var(--dark-color);
+		margin-bottom: 8px;
+	}
+
+	.single-product-item p.product-price {
+		font-size: 26px;
+		font-weight: 850;
+		color: var(--primary-color);
+		margin-bottom: 20px;
+	}
+
+	.single-product-item p.product-price span {
+		display: block;
+		font-size: 11px;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: #aaaaaa;
+		letter-spacing: 1px;
+		margin-bottom: 5px;
+	}
+
+	.single-product-item .cart-btn {
+		width: 100%;
+		background: linear-gradient(135deg, var(--primary-color), #f79944) !important;
+		color: white !important;
+		border-radius: 50px !important;
+		padding: 13px 20px !important;
+		font-weight: 750 !important;
+		border: none !important;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		transition: var(--transition-smooth) !important;
+		box-shadow: 0 5px 15px rgba(242, 129, 35, 0.25);
+	}
+
+	.single-product-item .cart-btn:hover {
+		background: var(--dark-color) !important;
+		box-shadow: 0 8px 20px rgba(5, 25, 35, 0.35) !important;
+		transform: translateY(-2px);
+	}
+
+	.single-product-item .cart-btn:active {
+		transform: translateY(1px);
+	}
+
+	/* Deal countdown capsules */
+	.time-counter {
+		margin-top: 30px;
+	}
+
+	.counter-column {
+		margin-right: 15px !important;
+		margin-bottom: 15px;
+	}
+
+	.counter-column .inner {
+		background: rgba(255, 255, 255, 0.08) !important;
+		backdrop-filter: blur(12px);
+		border: 1px solid rgba(255, 255, 255, 0.12) !important;
+		border-radius: 16px !important;
+		min-width: 95px !important;
+		padding: 16px 12px !important;
+		color: white !important;
+		text-align: center;
+		font-weight: 600;
+		font-size: 13px !important;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+	}
+
+	.counter-column .inner .count {
+		display: block;
+		font-size: 34px !important;
+		font-weight: 850 !important;
+		color: var(--primary-color) !important;
+		margin-bottom: 2px;
+	}
+
+	/* Testimonial Area */
+	.testimonail-section {
+		background: linear-gradient(180deg, #ffffff, #fcfcfc, #f8f9fa);
+		padding: 120px 0;
+	}
+
+	.client-avater img {
+		border: 4px solid var(--primary-color) !important;
+		box-shadow: 0 10px 25px rgba(242, 129, 35, 0.2);
+	}
+
+	/* News Cards styling */
+	.single-latest-news {
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+		border-radius: 20px !important;
+		overflow: hidden;
+		background: #ffffff;
+		height: calc(100% - 30px);
+		margin-bottom: 30px;
+		transition: var(--transition-smooth);
+		border: 1px solid rgba(0, 0, 0, 0.02);
+	}
+
+	.single-latest-news:hover {
+		transform: translateY(-8px);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+		border-color: rgba(242, 129, 35, 0.15);
+	}
+
+	.news-text-box {
+		padding: 28px !important;
+	}
+
+	.news-text-box h3 {
+		font-size: 19px !important;
+		font-weight: 800 !important;
+		line-height: 1.45 !important;
+		margin-bottom: 12px;
+	}
+
+	.news-text-box h3 a {
+		color: var(--dark-color) !important;
+		transition: var(--transition-smooth);
+	}
+
+	.news-text-box h3 a:hover {
+		color: var(--primary-color) !important;
+	}
+
+	/* Responsive Overrides */
+	@media (max-width: 991px) {
+		.hero-text h1 {
+			font-size: 48px !important;
+		}
+
+		.features-container {
+			margin-top: 30px;
+		}
+
+		.feature-card {
+			margin-bottom: 20px;
+		}
+	}
+
+	@media (max-width: 767px) {
+		.section-title h3 {
+			font-size: 32px;
+		}
+
+		.single-product-item {
+			padding: 24px 18px !important;
+		}
+
+		.category-card {
+			padding: 18px;
+		}
+
+		.category-card .category-img-container {
+			height: 110px;
+		}
+
+		.category-card h3 {
+			font-size: 17px;
+		}
+
+		.category-card p {
+			font-size: 12px;
+		}
+	}
+</style>
+
+<!-- search area -->
+<div class="search-area">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<span class="close-btn"><i class="fas fa-window-close"></i></span>
+				<div class="search-bar">
+					<div class="search-bar-tablecell">
+						<h3>Search For:</h3>
+						<form method="GET" action="{% url 'shop_view' %}">
+							<input type="text" name="search" placeholder="Search fruits...">
+							<button type="submit">Search <i class="fas fa-search"></i></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end search area -->
+
+<!-- home page slider -->
+<div class="homepage-slider">
+	<!-- single home slider -->
+	<div class="single-homepage-slider homepage-bg-1">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-lg-7 offset-lg-1 offset-xl-0">
+					<div class="hero-text">
+						<div class="hero-text-tablecell">
+							<p class="subtitle">Fresh & Organic</p>
+							<h1>Delicious Seasonal Fruits</h1>
+							<div class="hero-btns">
+								<a href="{% url 'shop_view' %}" class="boxed-btn">Fruit Collection</a>
+								<a href="{% url 'contact_view' %}" class="bordered-btn">Contact Us</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- single home slider -->
+	<div class="single-homepage-slider homepage-bg-2">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 offset-lg-1 text-center">
+					<div class="hero-text">
+						<div class="hero-text-tablecell">
+							<p class="subtitle">Fresh Everyday</p>
+							<h1>100% Organic Collection</h1>
+							<div class="hero-btns">
+								<a href="{% url 'shop_view' %}" class="boxed-btn">Visit Shop</a>
+								<a href="{% url 'contact_view' %}" class="bordered-btn">Contact Us</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- single home slider -->
+	<div class="single-homepage-slider homepage-bg-3">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 offset-lg-1 text-right">
+					<div class="hero-text">
+						<div class="hero-text-tablecell">
+							<p class="subtitle">Mega Sale Going On!</p>
+							<h1>Get December Discount</h1>
+							<div class="hero-btns">
+								<a href="{% url 'shop_view' %}" class="boxed-btn">Visit Shop</a>
+								<a href="{% url 'contact_view' %}" class="bordered-btn">Contact Us</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end home page slider -->
+
+<!-- features list section -->
+<div class="list-section pb-80">
+	<div class="container features-container">
+		<div class="row">
+			<div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+				<div class="feature-card d-flex align-items-center">
+					<div class="feature-icon-box">
+						<i class="fas fa-shipping-fast"></i>
+					</div>
+					<div class="feature-info">
+						<h3>Free Shipping</h3>
+						<p>When order over ₹500</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+				<div class="feature-card d-flex align-items-center">
+					<div class="feature-icon-box">
+						<i class="fas fa-phone-volume"></i>
+					</div>
+					<div class="feature-info">
+						<h3>24/7 Support</h3>
+						<p>Get support all day</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6">
+				<div class="feature-card d-flex align-items-center">
+					<div class="feature-icon-box">
+						<i class="fas fa-sync"></i>
+					</div>
+					<div class="feature-info">
+						<h3>Refund</h3>
+						<p>Get refund within 3 days!</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end features list section -->
+
+<!-- fruit categories section -->
+<div class="product-section pt-80 pb-80">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div class="section-title">
+					<h3><span class="orange-text">Fruit</span> Categories</h3>
+					<p>Explore our carefully selected fruit categories, offering freshness, quality, and variety in
+						every choice.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<!-- Simple Fruits -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+				<a href="{% url 'shop_view' %}" class="category-card text-center">
+					<div class="category-img-container">
+						<img src="{% static 'user_app/assets/img/products/product-image-01.jpg' %}" alt="Simple Fruits">
+					</div>
+					<h3>Simple Fruits</h3>
+					<p>Apple, Banana, Mango, Orange, Peach</p>
+				</a>
+			</div>
+
+			<!-- Aggregate Fruits -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+				<a href="{% url 'shop_view' %}" class="category-card text-center">
+					<div class="category-img-container">
+						<img src="{% static 'user_app/assets/img/products/product-image-02.jpg' %}"
+							alt="Aggregate Fruits">
+					</div>
+					<h3>Aggregate Fruits</h3>
+					<p>Strawberry, Raspberry, Blackberry</p>
+				</a>
+			</div>
+
+			<!-- Composite Fruits -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+				<a href="{% url 'shop_view' %}" class="category-card text-center">
+					<div class="category-img-container">
+						<img src="{% static 'user_app/assets/img/products/product-image-03.png' %}"
+							alt="Composite Fruits">
+					</div>
+					<h3>Composite Fruits</h3>
+					<p>Pineapple, Jackfruit, Fig</p>
+				</a>
+			</div>
+
+			<!-- Stone Fruits -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+				<a href="{% url 'shop_view' %}" class="category-card text-center">
+					<div class="category-img-container">
+						<img src="{% static 'user_app/assets/img/products/product-image-04.png' %}" alt="Stone Fruits">
+					</div>
+					<h3>Stone Fruits</h3>
+					<p>Mango, Peach, Plum, Cherry, Apricot</p>
+				</a>
+			</div>
+
+			<!-- Dry Fruits -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+				<a href="{% url 'shop_view' %}" class="category-card text-center">
+					<div class="category-img-container">
+						<img src="{% static 'user_app/assets/img/products/product-image-05.png' %}" alt="Dry Fruits">
+					</div>
+					<h3>Dry Fruits</h3>
+					<p>Almond, Cashew, Walnut, Dates, Pistachio</p>
+				</a>
+			</div>
+
+			<!-- Citrus Fruits -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+				<a href="{% url 'shop_view' %}" class="category-card text-center">
+					<div class="category-img-container">
+						<img src="{% static 'user_app/assets/img/products/product-image-06.png' %}" alt="Citrus Fruits">
+					</div>
+					<h3>Citrus Fruits</h3>
+					<p>Lemon, Grapefruit, Sweet Lime (Mosambi)</p>
+				</a>
+			</div>
+
+			<!-- Berries -->
+			<div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+				<a href="{% url 'shop_view' %}" class="category-card text-center">
+					<div class="category-img-container">
+						<img src="{% static 'user_app/assets/img/products/product-image-07.png' %}" alt="Berries">
+					</div>
+					<h3>Berries</h3>
+					<p>Grapes, Blueberry, Cranberry, Tomato</p>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end fruit categories section -->
+
+<!-- product section -->
+<div class="product-section mt-80 mb-80">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div class="section-title">
+					<h3><span class="orange-text">Our</span> Products</h3>
+					<p>Fresh, organic, and hand-picked fruits categorized for your convenience.</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- ALL PRODUCTS GRID -->
+		<div class="row product-lists">
+			{% for r in rp %}
+			<div class="col-lg-3 col-md-4 col-sm-6 col-12 text-center simple-fruit mb-4">
+				<div class="single-product-item">
+					<div class="product-image">
+						<a href="{% url 'single_product_view' r.id %}">
+							{% if r.images.first %}
+							<img src="{{ r.images.first.image.url }}" alt="{{ r.name }}">
+							{% endif %}
+						</a>
+					</div>
+					<h3>{{r.name}}</h3>
+					<p class="product-price"><span>Price Per {{r.unit}}</span>₹{{r.price}}</p>
+					<button class="cart-btn add-to-cart" data-id="{{ r.id }}" data-url="{% url 'cart_add' r.id %}">
+						<i class="fas fa-shopping-cart"></i> Add to Cart
+					</button>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+<!-- end product section -->
+
+<!-- cart banner section -->
+<section class="cart-banner pt-100 pb-100">
+	<div class="container">
+		<div class="row clearfix">
+			<!--Image Column-->
+			<div class="image-column col-lg-6">
+				<div class="image">
+					<div class="price-box">
+						<div class="inner-price">
+							<span class="price">
+								<strong>30%</strong> <br> off per kg
+							</span>
+						</div>
+					</div>
+					<img src="{% static 'user_app/assets/img/a.jpg' %}" alt="">
+				</div>
+			</div>
+			<!--Content Column-->
+			<div class="content-column col-lg-6">
+				<h3><span class="orange-text">Deal</span> of the month</h3>
+				<h4>Hikan Strawberry</h4>
+				<div class="text">Indulge in the finest, fresh, and handpicked Hikan Strawberries this season. Grown
+					naturally and packed with high nutritional values. Grab them now at a special discounted pricing!
+				</div>
+				<!--Countdown Timer-->
+				<div class="time-counter">
+					<div class="time-countdown clearfix" data-countdown="2026/06/30">
+						<div class="counter-column">
+							<div class="inner"><span class="count">00</span>Days</div>
+						</div>
+						<div class="counter-column">
+							<div class="inner"><span class="count">00</span>Hours</div>
+						</div>
+						<div class="counter-column">
+							<div class="inner"><span class="count">00</span>Mins</div>
+						</div>
+						<div class="counter-column">
+							<div class="inner"><span class="count">00</span>Secs</div>
+						</div>
+					</div>
+				</div>
+				<a href="{% url 'shop_view' %}" class="cart-btn mt-3"><i class="fas fa-shopping-cart"></i> Shop Now</a>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- end cart banner section -->
+
+<!-- testimonial-section -->
+<div class="testimonail-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-10 offset-lg-1 text-center">
+				<div class="testimonial-sliders">
+					<div class="single-testimonial-slider">
+						<div class="client-avater">
+							<img src="{% static 'user_app/assets/img/avaters/avatar1.png' %}" alt="">
+						</div>
+						<div class="client-meta">
+							<h3>Bhavin <span>Local shop owner</span></h3>
+							<p class="testimonial-body">
+								"Bhavin is our creative mind, curating the best fruit boxes and deals. His attention to
+								detail and innovation make every order special."
+							</p>
+							<div class="last-icon">
+								<i class="fas fa-quote-right"></i>
+							</div>
+						</div>
+					</div>
+					<div class="single-testimonial-slider">
+						<div class="client-avater">
+							<img src="{% static 'user_app/assets/img/avaters/avatar2.png' %}" alt="">
+						</div>
+						<div class="client-meta">
+							<h3>Jainul <span>Local shop owner</span></h3>
+							<p class="testimonial-body">
+								"Jainul is our logistics expert, ensuring every fruit reaches you fresh and on time. His
+								dedication and precision keep our operations smooth and reliable."
+							</p>
+							<div class="last-icon">
+								<i class="fas fa-quote-right"></i>
+							</div>
+						</div>
+					</div>
+					<div class="single-testimonial-slider">
+						<div class="client-avater">
+							<img src="{% static 'user_app/assets/img/avaters/avatar3.png' %}" alt="">
+						</div>
+						<div class="client-meta">
+							<h3>Sahil <span>Local shop owner</span></h3>
+							<p class="testimonial-body">
+								"Sahil is the heart of our customer support. Always cheerful and approachable, he makes
+								sure every customer feels valued and heard."
+							</p>
+							<div class="last-icon">
+								<i class="fas fa-quote-right"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end testimonial-section -->
+
+<!-- advertisement section -->
+<div class="abt-section mb-150 mt-150">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-12">
+				<div class="abt-bg">
+					<a href="https://www.youtube.com/watch?v=DBLlFWYcIGQ" class="video-play-btn popup-youtube"><i
+							class="fas fa-play"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-12">
+				<div class="abt-text">
+					<p class="top-sub">Since Year 1999</p>
+					<h2>We are <span class="orange-text">FruitBazar</span></h2>
+					<p>"We have been serving fresh and quality fruits since 1999. Our commitment is to bring the best
+						produce to your doorstep. From careful selection to prompt delivery, we ensure every fruit
+						reaches you in perfect condition. Experience freshness, taste, and health in every bite!"</p>
+					<a href="{% url 'shop_view' %}" class="boxed-btn mt-4">know more</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end advertisement section -->
+
+<!-- shop banner -->
+<section class="shop-banner">
+	<div class="container">
+		<h3>December sale is on! <br> with big <span class="orange-text">Discount...</span></h3>
+		<div class="sale-percent"><span>Sale! <br> Upto</span>50% <span>off</span></div>
+		<a href="{% url 'shop_view' %}" class="cart-btn btn-lg">Shop Now</a>
+	</div>
+</section>
+<!-- end shop banner -->
+
+<!-- latest news -->
+<div class="latest-news pt-150 pb-150">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div class="section-title">
+					<h3><span class="orange-text">Our</span> News</h3>
+					<p>"Stay updated with the latest news, offers, and updates from FruitBazar. From fresh arrivals to
+						seasonal specials, we keep you informed about everything happening in the world of fresh fruits
+						and healthy living."</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-4 col-md-6">
+				<div class="single-latest-news">
+					<a href="{% url 'single_news_view' %}">
+						<div class="latest-news-bg news-bg-1"></div>
+					</a>
+					<div class="news-text-box">
+						<h3><a href="{% url 'single_news_view' %}">You will vainly look for fruit on it in autumn.</a>
+						</h3>
+						<p class="blog-meta">
+							<span class="author"><i class="fas fa-user"></i> Admin</span>
+							<span class="date"><i class="fas fa-calendar"></i> 27 December, 2019</span>
+						</p>
+						<p class="excerpt">"You won’t find fresh fruit on it during autumn. Be sure to check the season
+							for availability!"</p>
+						<a href="{% url 'single_news_view' %}" class="read-more-btn">read more <i
+								class="fas fa-angle-right"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6">
+				<div class="single-latest-news">
+					<a href="{% url 'single_news_view' %}">
+						<div class="latest-news-bg news-bg-2"></div>
+					</a>
+					<div class="news-text-box">
+						<h3><a href="{% url 'single_news_view' %}">A man's worth has its season, like tomato.</a></h3>
+						<p class="blog-meta">
+							<span class="author"><i class="fas fa-user"></i> Admin</span>
+							<span class="date"><i class="fas fa-calendar"></i> 27 December, 2019</span>
+						</p>
+						<p class="excerpt">"You won’t find fresh fruit on it during autumn. Be sure to check the season
+							for availability!"</p>
+						<a href="{% url 'single_news_view' %}" class="read-more-btn">read more <i
+								class="fas fa-angle-right"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0">
+				<div class="single-latest-news">
+					<a href="{% url 'single_news_view' %}">
+						<div class="latest-news-bg news-bg-3"></div>
+					</a>
+					<div class="news-text-box">
+						<h3><a href="{% url 'single_news_view' %}">Good thoughts bear good fresh juicy fruit.</a></h3>
+						<p class="blog-meta">
+							<span class="author"><i class="fas fa-user"></i> Admin</span>
+							<span class="date"><i class="fas fa-calendar"></i> 27 December, 2019</span>
+						</p>
+						<p class="excerpt">"You won’t find fresh fruit on it during autumn. Be sure to check the season
+							for availability!"</p>
+						<a href="{% url 'single_news_view' %}" class="read-more-btn">read more <i
+								class="fas fa-angle-right"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 text-center mt-5">
+				<a href="{% url 'news_view' %}" class="boxed-btn">More News</a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end latest news -->
+
+<!-- logo carousel -->
+<div class="logo-carousel-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="logo-carousel-inner">
+					<div class="single-logo-item">
+						<img src="{% static 'user_app/assets/img/company-logos/1.png' %}" alt="">
+					</div>
+					<div class="single-logo-item">
+						<img src="{% static 'user_app/assets/img/company-logos/2.png' %}" alt="">
+					</div>
+					<div class="single-logo-item">
+						<img src="{% static 'user_app/assets/img/company-logos/3.png' %}" alt="">
+					</div>
+					<div class="single-logo-item">
+						<img src="{% static 'user_app/assets/img/company-logos/4.png' %}" alt="">
+					</div>
+					<div class="single-logo-item">
+						<img src="{% static 'user_app/assets/img/company-logos/5.png' %}" alt="">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end logo carousel -->
+
+{% endblock %}

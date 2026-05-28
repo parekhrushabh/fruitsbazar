@@ -1,0 +1,175 @@
+{% extends 'user_app/master.html' %}
+{% load static%}
+{% block content %}
+
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<form method="GET" action="{% url 'shop_view' %}">
+								<input type="text" name="search" placeholder="Search fruits...">
+								<button type="submit">Search <i class="fas fa-search"></i></button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Cart</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- cart -->
+	<div class="cart-section mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-12">
+					<div class="cart-table-wrap">
+						<table class="cart-table">
+							<thead class="cart-table-head">
+								<tr class="table-head-row">
+									<th class="product-image">Id</th>
+									<th class="product-image">Product Image</th>
+									<th class="product-image">Category Name</th>
+									<th class="product-image">Product Name</th>
+									<th class="product-image">Product Quantity</th>
+									<th class="product-image">Product Unit</th>
+									<th class="product-image">Product Price</th>
+									<th class="product-price">Item Price</th>
+									<th class="product-remove">Clear Cart</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for item in cart_items %}
+								<tr class="table-body-row">									
+									<td>{{forloop.counter}}</td>
+									<td>
+										<img src="{{ item.product.images.first.image.url }}" width="80">
+									</td>
+									<td>{{ item.product.category.name }}</td>
+									<td>{{ item.product.name }}</td>
+									<!-- <td>{{ item.quantity }}</td> -->
+									<td>
+										<div style="display:flex; align-items:center; gap:10px;">
+
+											<!-- Decrement -->
+											<a href="{% url 'item_decrement' item.product.id %}" 
+											style="padding:5px 10px; background:#ddd; border-radius:5px;">-</a>
+
+											<strong>{{ item.quantity }}</strong>
+
+											<!-- Increment -->
+											<a href="{% url 'item_increment' item.product.id %}" 
+											style="padding:5px 10px; background:#F28123; color:white; border-radius:5px;">+</a>
+
+										</div>
+									</td>
+									<td>{{ item.product.unit }}</td>
+									<td>{{ item.product.price }}</td>
+									<!-- <td>{{ item.product.Item_price }}</td> -->
+									<td>{{ item.item_total }}</td>
+									<td class="product-remove">
+										<a href="{% url 'item_clear' item.product.id %}" class="remove-btn" title="Remove Item">
+											<i class="fas fa-trash"></i>
+										</a>
+									</td>								
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="total-section">
+						<table class="total-table">
+							<thead class="total-table-head">
+								<tr class="table-total-row">
+									<th>Total</th>
+									<th>Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="total-data">
+								<td><strong>Subtotal: </strong></td>
+								<td>{{ subtotal }}</td>
+							</tr>
+							<tr class="total-data">
+								<td><strong>Shipping: </strong></td>
+								<td>{{ shipping }}</td>
+							</tr>
+							<tr class="total-data">
+								<td><strong>Total: </strong></td>
+								<td>{{ total }}</td>
+							</tr>
+							</tbody>
+						</table>
+						<div class="cart-buttons">
+							<!-- <a href="{% url 'cart_view' %}" class="boxed-btn">Update Cart</a> -->
+							<a href="{% url 'checkout_view' %}" class="boxed-btn black">Check Out</a>
+						</div>
+					</div>
+
+					<!-- <div class="coupon-section">
+						<h3>Apply Coupon</h3>
+						<div class="coupon-form-wrap">
+							<form action="{% url 'index_view' %}">
+								<p><input type="text" placeholder="Coupon"></p>
+								<p><input type="submit" value="Apply"></p>
+							</form>
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end cart -->
+
+	<!-- logo carousel -->
+	<div class="logo-carousel-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="logo-carousel-inner">
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/1.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/2.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/3.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/4.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/5.png' %}" alt="">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end logo carousel -->
+
+{% endblock %}

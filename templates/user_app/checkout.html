@@ -1,0 +1,310 @@
+{% extends 'user_app/master.html' %}
+{% load static%}
+{% block content %}
+
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<form method="GET" action="{% url 'shop_view' %}">
+								<input type="text" name="search" placeholder="Search fruits...">
+								<button type="submit">Search <i class="fas fa-search"></i></button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Check Out Product</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- check out section -->
+	<div class="checkout-section mt-150 mb-150">
+		<div class="container">
+			<form method="POST" action="{% url 'checkout_view' %}" id="checkout-form">
+				{% csrf_token %}
+				<div class="row">
+					<!-- Left Side: Billing and Payment -->
+					<div class="col-lg-8">
+						<div class="checkout-accordion-wrap">
+							<div class="accordion" id="accordionExample">
+								
+								<!-- Step 1: Billing Details -->
+								<div class="card single-accordion">
+									<div class="card-header" id="headingOne">
+										<h5 class="mb-0">
+											<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+												<i class="fas fa-map-marker-alt mr-2"></i> Shipping & Billing Information
+											</button>
+										</h5>
+									</div>
+
+									<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+										<div class="card-body">
+											<div class="billing-address-form">
+												<div class="row">
+													<div class="col-md-6">
+														<p><label>Full Name</label><input type="text" name="name" placeholder="John Doe" required value="{{ request.user.get_full_name }}"></p>
+													</div>
+													<div class="col-md-6">
+														<p><label>Email Address</label><input type="email" name="email" placeholder="example@mail.com" required value="{{ request.user.email }}"></p>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-6">
+														<p><label>Phone Number</label><input type="tel" name="phone" placeholder="+1 234 567 890" required></p>
+													</div>
+													<div class="col-md-6">
+														<p><label>Address</label><input type="text" name="address" placeholder="Street Address" required></p>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-6">
+														<p><label>City</label><input type="text" name="city" placeholder="City" required></p>
+													</div>
+													<div class="col-md-6">
+														<p><label>Zip Code</label><input type="text" name="zip_code" placeholder="Zip Code" required></p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Step 2: Payment Method -->
+								<div class="card single-accordion">
+									<div class="card-header" id="headingThree">
+										<h5 class="mb-0">
+											<button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+												<i class="fas fa-credit-card mr-2"></i> Payment Method
+											</button>
+										</h5>
+									</div>
+									<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+										<div class="card-body">
+											<div class="payment-method-selection mb-4">
+												<div class="custom-control custom-radio custom-control-inline p-3 border rounded mr-3" style="min-width: 150px;">
+													<input type="radio" id="payment_card" name="payment_method" class="custom-control-input" value="Card" checked>
+													<label class="custom-control-label" for="payment_card">
+														<i class="fas fa-credit-card mr-2"></i> Credit Card
+													</label>
+												</div>
+												<div class="custom-control custom-radio custom-control-inline p-3 border rounded" style="min-width: 150px;">
+													<input type="radio" id="payment_cash" name="payment_method" class="custom-control-input" value="Cash on Delivery">
+													<label class="custom-control-label" for="payment_cash">
+														<i class="fas fa-truck mr-2"></i> Cash on Delivery
+													</label>
+												</div>
+											</div>
+
+											<!-- Card Details Section (Conditional) -->
+											<div id="card-details-section" class="card-details-form p-4 bg-light rounded shadow-sm">
+												<h6 class="mb-3 font-weight-bold" style="color: #F28123;"><i class="fas fa-shield-alt mr-2"></i>Secure Razorpay Checkout</h6>
+												<p class="mb-2">You will pay securely via Razorpay payment gateway.</p>
+												<p class="text-muted small"><i class="fas fa-info-circle mr-1"></i> Supports all domestic and international credit/debit cards, UPI, Net Banking, and popular wallets. All transaction data is secure and encrypted.</p>
+											</div>
+
+											<div id="cash-details-section" class="d-none p-4 bg-light rounded shadow-sm">
+												<p class="mb-0 text-success"><i class="fas fa-check-circle mr-2"></i> You will pay ₹{{ total }} when your fruits are delivered.</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Right Side: Order Summary -->
+					<div class="col-lg-4">
+						<div class="order-details-wrap shadow-sm">
+							<h4 class="mb-4 font-weight-bold">Order Summary</h4>
+							<table class="order-details w-100">
+								<thead>
+									<tr class="border-bottom">
+										<th class="pb-2">Product</th>
+										<th class="pb-2 text-right">Total</th>
+									</tr>
+								</thead>
+								<tbody class="order-details-body">
+									{% for item in cart_items %}
+									<tr class="border-bottom">
+										<td class="py-3">
+											<div class="d-flex align-items-center">
+												{% if item.product.images.first %}
+												<img src="{{ item.product.images.first.image.url }}" width="40" height="40" class="mr-3 rounded object-fit-cover shadow-sm">
+												{% endif %}
+												<div>
+													<div class="font-weight-bold text-dark">{{ item.product.name }}</div>
+													<small class="text-muted">Qty: {{ item.quantity }}</small>
+												</div>
+											</div>
+										</td>
+										<td class="py-3 text-right font-weight-bold text-dark">₹{{ item.item_total }}</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+								<tbody class="checkout-details mt-3">
+									<tr>
+										<td class="py-2 text-muted">Subtotal</td>
+										<td class="py-2 text-right text-dark">₹{{ subtotal }}</td>
+									</tr>
+									<tr>
+										<td class="py-2 text-muted">Shipping</td>
+										<td class="py-2 text-right text-dark">₹{{ shipping }}</td>
+									</tr>
+									<tr class="total border-top mt-2">
+										<td class="py-3 font-weight-bold h5 text-primary">Total Amount</td>
+										<td class="py-3 text-right font-weight-bold h5 text-primary">₹{{ total }}</td>
+									</tr>
+								</tbody>
+							</table>
+							<button type="submit" id="submit-btn" class="boxed-btn w-100 mt-4 border-0 shadow-sm" style="cursor: pointer; background-color: #F28123; border-radius: 50px; font-weight: bold; transition: 0.3s;">
+								Confirm Order & Checkout
+							</button>
+							<div class="text-center mt-3">
+								<img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" height="20" class="mx-2 opacity-50">
+								<img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" height="20" class="mx-2 opacity-50">
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const paymentCard = document.getElementById('payment_card');
+			const paymentCash = document.getElementById('payment_cash');
+			const cardSection = document.getElementById('card-details-section');
+			const cashSection = document.getElementById('cash-details-section');
+			
+			// Toggle Payment Sections
+			function toggleSections() {
+				if (paymentCard.checked) {
+					cardSection.classList.remove('d-none');
+					cashSection.classList.add('d-none');
+				} else {
+					cardSection.classList.add('d-none');
+					cashSection.classList.remove('d-none');
+				}
+			}
+
+			paymentCard.addEventListener('change', toggleSections);
+			paymentCash.addEventListener('change', toggleSections);
+		});
+	</script>
+
+	<style>
+		.billing-address-form label {
+			font-weight: 600;
+			color: #333;
+			margin-bottom: 5px;
+			display: block;
+			font-size: 0.9rem;
+		}
+		.billing-address-form input {
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			padding: 12px;
+			width: 100%;
+			transition: 0.3s;
+		}
+		.billing-address-form input:focus {
+			border-color: #F28123;
+			outline: none;
+			box-shadow: 0 0 0 3px rgba(242, 129, 35, 0.1);
+		}
+		.single-accordion {
+			border: none;
+			margin-bottom: 20px;
+			border-radius: 15px !important;
+			overflow: hidden;
+			box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+		}
+		.card-header {
+			background: #fff;
+			border: none;
+		}
+		.btn-link {
+			color: #051922;
+			font-weight: 700;
+			text-decoration: none !important;
+			font-size: 1.1rem;
+		}
+		.order-details-wrap {
+			background: #fff;
+			padding: 30px;
+			border-radius: 20px;
+			position: sticky;
+			top: 100px;
+		}
+		.custom-control-input:checked ~ .custom-control-label::before {
+			background-color: #F28123;
+			border-color: #F28123;
+		}
+		.boxed-btn:hover {
+			background-color: #051922 !important;
+			transform: translateY(-2px);
+		}
+		.is-invalid {
+			border-color: #dc3545 !important;
+		}
+		.opacity-50 {
+			opacity: 0.5;
+		}
+		.object-fit-cover {
+			object-fit: cover;
+		}
+	</style>
+	<!-- end check out section -->
+
+	<!-- logo carousel -->
+	<div class="logo-carousel-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="logo-carousel-inner">
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/1.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/2.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/3.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/4.png' %}" alt="">
+						</div>
+						<div class="single-logo-item">
+							<img src="{% static  ' user_app/assets/img/company-logos/5.png' %}" alt="">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end logo carousel -->
+
+{% endblock %}

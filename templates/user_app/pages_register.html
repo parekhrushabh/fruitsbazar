@@ -1,0 +1,97 @@
+{% extends 'user_app/auth_base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-5 col-lg-4">
+            
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="color: #F28123;">FRUIT <span style="color: #051922;">BAZAR</span></h2>
+                <p class="text-muted small">Join us and start shopping for fresh fruits</p>
+            </div>
+
+            <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                <div class="card-body p-5">
+
+                    <h3 class="text-center mb-4 fw-bold">Sign Up</h3>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Username</label>
+                            <div class="input-group border rounded-pill px-3 py-1">
+                                <span class="input-group-text bg-transparent border-0"><i class="fas fa-user text-muted"></i></span>
+                                <input type="text" name="username" class="form-control bg-transparent border-0" placeholder="Choose a username" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Email</label>
+                            <div class="input-group border rounded-pill px-3 py-1">
+                                <span class="input-group-text bg-transparent border-0"><i class="fas fa-envelope text-muted"></i></span>
+                                <input type="email" name="email" class="form-control bg-transparent border-0" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Password</label>
+                            <div class="input-group border rounded-pill px-3 py-1">
+                                <span class="input-group-text bg-transparent border-0"><i class="fas fa-lock text-muted"></i></span>
+                                <input type="password" name="password1" class="form-control bg-transparent border-0" placeholder="Create a password" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted small fw-bold">Confirm Password</label>
+                            <div class="input-group border rounded-pill px-3 py-1">
+                                <span class="input-group-text bg-transparent border-0"><i class="fas fa-shield-alt text-muted"></i></span>
+                                <input type="password" name="password2" class="form-control bg-transparent border-0" placeholder="Confirm password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn w-100 py-3 fw-bold shadow-sm" style="background-color: #F28123; color: white; border-radius: 50px; transition: 0.3s;">
+                            Create Account
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="small text-muted mb-0">
+                            Already have an account?
+                            <a href="{% url 'pages_login' %}" class="fw-bold text-decoration-none" style="color: #051922;">Sign In</a>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'index_view' %}" class="text-muted small text-decoration-none"><i class="fas fa-arrow-left me-1"></i> Back to Homepage</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    .input-group:focus-within {
+        border-color: #F28123 !important;
+        box-shadow: 0 0 0 3px rgba(242, 129, 35, 0.1);
+    }
+    .btn:hover {
+        background-color: #051922 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+    }
+    .form-control:focus {
+        box-shadow: none;
+    }
+</style>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

@@ -1,0 +1,718 @@
+{% extends 'admin_app/master.html' %}
+{% load static %}
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'admin_app:index' %}">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+            <!-- Orders Card -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">Total Orders <span>| All Time</span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ total_orders }}</h6>
+                      <span class="text-success small pt-1 fw-bold">Active</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Orders Card -->
+
+            <!-- Revenue Card -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card revenue-card">
+                <div class="card-body">
+                  <h5 class="card-title">Revenue <span>| Success</span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-currency-rupee"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>₹{{ total_revenue|floatformat:2 }}</h6>
+                      <span class="text-success small pt-1 fw-bold">Verified</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!-- Pending Payments Card -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card customers-card text-warning">
+                <div class="card-body">
+                  <h5 class="card-title text-muted">Pending <span>| COD & Online</span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center text-warning" style="background: #fff3cd;">
+                      <i class="bi bi-hourglass-split"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 class="text-warning">₹{{ total_pending_amount|floatformat:0 }}</h6>
+                      <span class="text-warning small pt-1 fw-bold">{{ pending_payments_count }} Pending</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Pending Payments Card -->
+
+            <!-- Payment Success Rate Card -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card sales-card text-info">
+                <div class="card-body">
+                  <h5 class="card-title text-muted">Success Rate <span>| Success %</span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center text-info" style="background: #e0f7fa;">
+                      <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 class="text-info">{{ payment_success_rate }}%</h6>
+                      <span class="text-success small pt-1 fw-bold">Conversion</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Payment Success Rate Card -->
+
+            <!-- Reports -->
+            <div class="col-12">
+              <div class="card">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Reports <span>/Today</span></h5>
+
+                  <!-- Line Chart -->
+                  <div id="reportsChart"></div>
+
+                  <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                      new ApexCharts(document.querySelector("#reportsChart"), {
+                        series: [{
+                          name: 'Sales (Orders)',
+                          data: {{ sales_data|safe }},
+                        }, {
+                          name: 'Revenue (₹)',
+                          data: {{ revenue_data|safe }}
+                        }, {
+                          name: 'New Customers',
+                          data: {{ customers_data|safe }}
+                        }],
+                        chart: {
+                          height: 350,
+                          type: 'area',
+                          toolbar: {
+                            show: false
+                          },
+                        },
+                        markers: {
+                          size: 4
+                        },
+                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
+                        fill: {
+                          type: "gradient",
+                          gradient: {
+                            shadeIntensity: 1,
+                            opacityFrom: 0.3,
+                            opacityTo: 0.4,
+                            stops: [0, 90, 100]
+                          }
+                        },
+                        dataLabels: {
+                          enabled: false
+                        },
+                        stroke: {
+                          curve: 'smooth',
+                          width: 2
+                        },
+                        xaxis: {
+                          type: 'category',
+                          categories: {{ chart_dates|safe }}
+                        },
+                        tooltip: {
+                          x: {
+                            format: 'dd MMM'
+                          },
+                        }
+                      }).render();
+                    });
+                  </script>
+                  <!-- End Line Chart -->
+
+                </div>
+
+              </div>
+            </div><!-- End Reports -->
+
+            <!-- Payment Analytics Section -->
+            <div class="col-12">
+              <div class="card shadow-sm border-0 mb-4" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                  <h5 class="card-title fw-bold mb-4">Payment & Revenue Analytics</h5>
+                  <div class="row">
+                    <!-- Donut Chart: Payment Status -->
+                    <div class="col-lg-5 col-md-12 mb-4 mb-lg-0">
+                      <div class="p-3 border rounded-3 bg-light h-100 text-center">
+                        <h6 class="fw-bold mb-3 text-muted">Payment Status Distribution</h6>
+                        <div id="paymentStatusChart" style="min-height: 250px;"></div>
+                        <div class="d-flex justify-content-around mt-3 small">
+                          <span class="text-success"><i class="bi bi-circle-fill me-1"></i> Success: {{ success_payments_count }}</span>
+                          <span class="text-warning"><i class="bi bi-circle-fill me-1"></i> Pending: {{ pending_payments_count }}</span>
+                          <span class="text-danger"><i class="bi bi-circle-fill me-1"></i> Failed: {{ failed_payments_count }}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Bar Chart: Payment Methods Successful Amount -->
+                    <div class="col-lg-7 col-md-12">
+                      <div class="p-3 border rounded-3 bg-light h-100">
+                        <h6 class="fw-bold mb-3 text-muted text-center">Successful Revenue by Method (₹)</h6>
+                        <div id="paymentMethodChart" style="min-height: 250px;"></div>
+                        <div class="d-flex justify-content-around mt-3 small">
+                          <span class="fw-semibold text-primary">COD Success: ₹{{ cod_success_amount|floatformat:2 }}</span>
+                          <span class="fw-semibold text-success">Online Success: ₹{{ online_success_amount|floatformat:2 }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Payment Analytics Section -->
+
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                // 1. Payment Status Donut Chart
+                new ApexCharts(document.querySelector("#paymentStatusChart"), {
+                  series: [{{ success_payments_count }}, {{ pending_payments_count }}, {{ failed_payments_count }}],
+                  chart: {
+                    type: 'donut',
+                    height: 250,
+                    toolbar: { show: false }
+                  },
+                  labels: ['Success', 'Pending', 'Failed'],
+                  colors: ['#2eca6a', '#ff771d', '#e82d3b'],
+                  legend: { show: false },
+                  dataLabels: { enabled: true },
+                  plotOptions: {
+                    pie: {
+                      donut: {
+                        size: '70%',
+                        labels: {
+                          show: true,
+                          name: { show: true },
+                          value: {
+                            show: true,
+                            formatter: function (val) { return val; }
+                          },
+                          total: {
+                            show: true,
+                            label: 'Total',
+                            formatter: function (w) {
+                              return {{ total_payments_count }};
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }).render();
+
+                // 2. Payment Method Revenue Bar Chart
+                new ApexCharts(document.querySelector("#paymentMethodChart"), {
+                  series: [{
+                    name: 'Successful Revenue (₹)',
+                    data: [{{ cod_success_amount }}, {{ online_success_amount }}]
+                  }],
+                  chart: {
+                    type: 'bar',
+                    height: 250,
+                    toolbar: { show: false }
+                  },
+                  colors: ['#4154f1', '#2eca6a'],
+                  plotOptions: {
+                    bar: {
+                      borderRadius: 6,
+                      horizontal: false,
+                      columnWidth: '45%',
+                      distributed: true
+                    }
+                  },
+                  dataLabels: { enabled: false },
+                  legend: { show: false },
+                  xaxis: {
+                    categories: ['Cash on Delivery (COD)', 'Online (Card/Razorpay)']
+                  },
+                  yaxis: {
+                    labels: {
+                      formatter: function (val) { return "₹" + val.toFixed(0); }
+                    }
+                  }
+                }).render();
+              });
+            </script>
+
+            <!-- Recent Payment Records -->
+            <div class="col-12">
+              <div class="card overflow-auto shadow-sm border-0 mb-4" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title fw-bold mb-0">Recent Payment Records <span>| Latest Transactions</span></h5>
+                    <a href="{% url 'admin_app:payment_list_view' %}" class="btn btn-sm btn-outline-primary rounded-pill">View All Payments</a>
+                  </div>
+
+                  {% if messages %}
+                  <div class="mb-3">
+                    {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+
+                  <table class="table table-hover align-middle">
+                    <thead class="bg-light">
+                      <tr>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Method</th>
+                        <th scope="col">Transaction ID</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Date</th>
+                        <th scope="col" class="text-center">Quick Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for payment in recent_payments %}
+                      <tr>
+                        <td class="fw-bold">#{{ payment.order.id }}</td>
+                        <td>
+                          <div class="fw-semibold">{{ payment.order.full_name }}</div>
+                          <small class="text-muted">{{ payment.order.email }}</small>
+                        </td>
+                        <td>
+                          <span class="badge bg-light text-dark px-2 py-1 border rounded-pill">{{ payment.payment_method }}</span>
+                        </td>
+                        <td><code class="text-primary">{{ payment.transaction_id }}</code></td>
+                        <td class="fw-bold text-dark">₹{{ payment.amount|floatformat:2 }}</td>
+                        <td>
+                          <span class="badge {% if payment.payment_status == 'Success' %}bg-success{% elif payment.payment_status == 'Pending' %}bg-warning{% else %}bg-danger{% endif %}" style="padding: 6px 12px; border-radius: 30px;">
+                            {{ payment.payment_status }}
+                          </span>
+                        </td>
+                        <td>{{ payment.created_at|date:"d M Y, H:i" }}</td>
+                        <td class="text-center">
+                          <form action="{% url 'admin_app:quick_update_payment_status' payment.id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle rounded-pill px-3" data-bs-toggle="dropdown" aria-expanded="false">
+                                Update
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: 10px;">
+                                <li>
+                                  <button type="submit" name="payment_status" value="Success" class="dropdown-item py-2 {% if payment.payment_status == 'Success' %}active{% endif %} text-success">
+                                    <i class="bi bi-check-circle-fill me-2"></i> Mark Success
+                                  </button>
+                                </li>
+                                <li>
+                                  <button type="submit" name="payment_status" value="Pending" class="dropdown-item py-2 {% if payment.payment_status == 'Pending' %}active{% endif %} text-warning">
+                                    <i class="bi bi-hourglass-split me-2"></i> Mark Pending
+                                  </button>
+                                </li>
+                                <li>
+                                  <button type="submit" name="payment_status" value="Failed" class="dropdown-item py-2 {% if payment.payment_status == 'Failed' %}active{% endif %} text-danger">
+                                    <i class="bi bi-x-circle-fill me-2"></i> Mark Failed
+                                  </button>
+                                </li>
+                              </ul>
+                            </div>
+                          </form>
+                        </td>
+                      </tr>
+                      {% empty %}
+                      <tr>
+                        <td colspan="8" class="text-center text-muted py-4">No payment records found.</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div><!-- End Recent Payment Records -->
+
+            <!-- Recent Orders -->
+            <div class="col-12">
+              <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                  <h5 class="card-title">Recent Orders <span>| Latest</span></h5>
+
+                  <table class="table table-borderless datatable">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for order in recent_orders %}
+                      <tr>
+                        <th scope="row"><a href="{% url 'admin_app:order_detail_view' order.id %}">#{{ order.id }}</a></th>
+                        <td>{{ order.full_name }}</td>
+                        <td>₹{{ order.total_amount }}</td>
+                        <td>
+                          <span class="badge {% if order.status == 'Processing' %}bg-success{% elif order.status == 'Pending' %}bg-warning{% else %}bg-danger{% endif %}">
+                            {{ order.status }}
+                          </span>
+                        </td>
+                        <td><a href="{% url 'admin_app:order_detail_view' order.id %}" class="btn btn-sm btn-primary">View</a></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div><!-- End Recent Orders -->
+
+            <!-- Top Selling -->
+            <div class="col-12">
+              <div class="card top-selling overflow-auto">
+
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Top Selling <span>| Today</span></h5>
+
+                  <table class="table table-borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Category Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for p in recent_products %}
+                      <tr>
+                        <th scope="row">
+                          {% if p.images.first %}
+                          <img src="{{ p.images.first.image.url }}" width="60">
+                          {% endif %}
+                        </th>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.Price }}</td>
+                        <td>{{ p.quantity }}</td>
+                        <td>{{ p.category.name }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Top Selling -->
+
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+
+              <div class="activity">
+
+                {% for act in recent_activity %}
+                <div class="activity-item d-flex">
+                  <div class="activite-label">{% if act.type == 'order' %}{{ act.time|timesince }}{% else %}Recent{% endif %}</div>
+                  <i class='bi bi-circle-fill activity-badge {% if act.type == "order" %}text-success{% else %}text-info{% endif %} align-self-start'></i>
+                  <div class="activity-content">
+                    {{ act.message }}
+                  </div>
+                </div><!-- End activity item-->
+                {% endfor %}
+
+              </div>
+
+            </div>
+          </div><!-- End Recent Activity -->
+
+          <!-- Budget Report -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">Budget Report <span>| This Month</span></h5>
+
+              <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
+                    legend: {
+                      data: ['Allocated Budget', 'Actual Spending']
+                    },
+                    radar: {
+                      // shape: 'circle',
+                      indicator: [{
+                          name: 'Sales',
+                          max: 6500
+                        },
+                        {
+                          name: 'Administration',
+                          max: 16000
+                        },
+                        {
+                          name: 'Information Technology',
+                          max: 30000
+                        },
+                        {
+                          name: 'Customer Support',
+                          max: 38000
+                        },
+                        {
+                          name: 'Development',
+                          max: 52000
+                        },
+                        {
+                          name: 'Marketing',
+                          max: 25000
+                        }
+                      ]
+                    },
+                    series: [{
+                      name: 'Budget vs spending',
+                      type: 'radar',
+                      data: [{
+                          value: [4200, 3000, 20000, 35000, 50000, 18000],
+                          name: 'Allocated Budget'
+                        },
+                        {
+                          value: [5000, 14000, 28000, 26000, 42000, 21000],
+                          name: 'Actual Spending'
+                        }
+                      ]
+                    }]
+                  });
+                });
+              </script>
+
+            </div>
+          </div><!-- End Budget Report -->
+
+          <!-- Website Traffic -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">Website Traffic <span>| Today</span></h5>
+
+              <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  echarts.init(document.querySelector("#trafficChart")).setOption({
+                    tooltip: {
+                      trigger: 'item'
+                    },
+                    legend: {
+                      top: '5%',
+                      left: 'center'
+                    },
+                    series: [{
+                      name: 'Access From',
+                      type: 'pie',
+                      radius: ['40%', '70%'],
+                      avoidLabelOverlap: false,
+                      label: {
+                        show: false,
+                        position: 'center'
+                      },
+                      emphasis: {
+                        label: {
+                          show: true,
+                          fontSize: '18',
+                          fontWeight: 'bold'
+                        }
+                      },
+                      labelLine: {
+                        show: false
+                      },
+                      data: [{
+                          value: {{ traffic_search }},
+                          name: 'Search Engine'
+                        },
+                        {
+                          value: {{ traffic_direct }},
+                          name: 'Direct'
+                        },
+                        {
+                          value: {{ traffic_email }},
+                          name: 'Email'
+                        },
+                        {
+                          value: {{ traffic_referral }},
+                          name: 'Referrals & Social'
+                        },
+                        {
+                          value: {{ traffic_other }},
+                          name: 'Others'
+                        }
+                      ]
+                    }]
+                  });
+                });
+              </script>
+
+            </div>
+          </div><!-- End Website Traffic -->
+
+          <!-- News & Updates Traffic -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">News &amp; Updates <span>| Today</span></h5>
+
+              <div class="news">
+                <div class="post-item clearfix">
+                  <img src="{% static 'admin_app/assets/img/news-1.jpg' %}" alt="">
+                  <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
+                  <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="{% static 'admin_app/assets/img/news-2.jpg' %}" alt="">
+                  <h4><a href="#">Quidem autem et impedit</a></h4>
+                  <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona nande...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="{% static 'admin_app/assets/img/news-3.jpg' %}" alt="">
+                  <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
+                  <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et totam...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="{% static 'admin_app/assets/img/news-4.jpg' %}" alt="">
+                  <h4><a href="#">Laborum corporis quo dara net para</a></h4>
+                  <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel rerum cuder...</p>
+                </div>
+
+                <div class="post-item clearfix">
+                  <img src="{% static 'admin_app/assets/img/news-5.jpg' %}" alt="">
+                  <h4><a href="#">Et dolores corrupti quae illo quod dolor</a></h4>
+                  <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae dignissimos eius...</p>
+                </div>
+
+              </div><!-- End sidebar recent posts-->
+
+            </div>
+          </div><!-- End News & Updates -->
+
+        </div><!-- End Right side columns -->
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+{% endblock %}

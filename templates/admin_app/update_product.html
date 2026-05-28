@@ -1,0 +1,99 @@
+{% extends 'admin_app/master.html' %}
+{% load static %}
+{% block content %}
+
+  <main id="main" class="main">
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Product Form</h5>
+
+            <!-- Product Form -->
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="card category-card shadow p-4">
+                    <h4 class="text-center mb-4">Add Product</h4>
+
+                    <div class="col-md-6">
+                      <label class="form-label">Category Name</label>
+                      <select name="category" class="form-select" required>
+                        <option value="" selected disabled>Select Category Name</option>
+                        {% for i in cat %}
+                        <option value="{{i.id}}" {% if up.category.id == i.id %}selected{% endif %}>{{i.name}}</option>
+                        {% endfor %}
+                      </select>
+                    </div><br>
+
+                    <div class="mb-3">
+                      <label class="form-label">Product Name</label>
+                      <input type="text" name="name" value="{{up.name}}" class="form-control" placeholder="Enter Product name" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Product Quntity</label>
+                      <input type="number" name="quantity" value="{{up.quantity}}" class="form-control" placeholder="Enter Product quantity" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Product Unit</label>
+                        <select name="unit" class="form-select" required>
+                            <option value="" selected disabled>Select Unit</option>
+                            <option value="kg" {% if up.unit == "kg" %}selected{% endif %}>Kilogram</option>
+                            <option value="g" {% if up.unit == "g" %}selected{% endif %}>Gram</option>
+                            <option value="pcs" {% if up.unit == "pcs" %}selected{% endif %}>Pieces</option>
+                            <option value="dozen" {% if up.unit == "dozen" %}selected{% endif %}>Dozen</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Product Price</label>
+                      <input type="number" step="0.01" name="price" value="{{up.price}}" class="form-control" placeholder="Enter Product price" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Total Price</label>
+                      <input type="number" step="0.01" name="Item_price" value="{{up.Item_price}}" class="form-control" placeholder="Enter Product total price" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Product Description</label>
+                      <textarea name="description" class="form-control" rows="3" placeholder="Enter Product description" required>{{up.description}}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label">Add More Images</label>
+                      <input type="file" name="images" class="form-control" multiple>
+
+                      <div class="d-flex gap-2 mt-2" style="overflow-x:auto;">
+                        {% for img in up.images.all %}
+                          <img src="{{ img.image.url }}" width="80" height="80" style="object-fit:cover;border-radius:6px;">
+                        {% endfor %}
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <button type="submit" class="btn btn-primary w-100">
+                          Save Product
+                      </button>
+                    </div>
+                    
+                </div>
+            </form>
+
+            <!-- End Product Form -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+{% endblock %}
+

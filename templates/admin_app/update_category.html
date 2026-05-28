@@ -1,0 +1,51 @@
+
+
+
+{% extends 'admin_app/master.html' %}
+{% load static %}
+{% block content %}
+
+  <main id="main" class="main">
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-6">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Category Form</h5>
+
+            <!-- Category Form -->
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="card category-card shadow p-4">
+                    <h4 class="text-center mb-4">Add Category</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label">Category Name</label>
+                        <input 
+                            type="text"
+                            name="name"
+                            value="{{up.name}}"
+                            class="form-control"
+                            placeholder="Enter category name"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Save Category
+                    </button>
+                </div>
+            </form>
+            <!-- End Category Form -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+{% endblock %}

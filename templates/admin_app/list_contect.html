@@ -1,0 +1,61 @@
+{% extends 'admin_app/master.html' %}
+{% load static %}
+{% block content %}
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Contact Data Tables</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'admin_app:index' %}">Home</a></li>
+          <li class="breadcrumb-item">Tables</li>
+          <li class="breadcrumb-item active">General</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+
+              <!-- Default Table -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Your Name</th>
+                    <th scope="col">Your Email</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Your Subject</th> 
+                    <th scope="col">Your Message</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for i in contect %}
+                  <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <th scope="row">{{ i.name }}</th>
+                    <th scope="row">{{ i.email }}</th>
+                    <th scope="row">{{ i.phone }}</th>
+                    <th scope="row">{{ i.subject }}</th>
+                    <th scope="row">{{ i.message }}</th>
+                  </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+              <!-- End small tables -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+{% endblock %}

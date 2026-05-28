@@ -1,0 +1,130 @@
+{% extends 'admin_app/master.html' %}
+{% load static %}
+{% block content %}
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Order Details #{{ order.id }}</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_app:index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_app:order_list_view' %}">Orders</a></li>
+                <li class="breadcrumb-item active">Details</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 mb-4" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold">Ordered Items</h5>
+                        <div class="table-responsive">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th>Product</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-right">Price</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if item.product.images.first %}
+                                                <img src="{{ item.product.images.first.image.url }}" width="40" class="me-3 rounded">
+                                                {% endif %}
+                                                <span>{{ item.product.name }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">{{ item.quantity }}</td>
+                                        <td class="text-right">₹{{ item.price }}</td>
+                                        <td class="text-right">₹{{ item.total_price }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <hr>
+                        <div class="row justify-content-end">
+                            <div class="col-md-5 text-end">
+                                <p class="mb-1">Subtotal: <strong>₹{{ order.subtotal }}</strong></p>
+                                <p class="mb-1">Shipping: <strong>₹{{ order.shipping_cost }}</strong></p>
+                                <h4 class="mt-2 text-primary fw-bold">Total: ₹{{ order.total_amount }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold">Customer & Shipping Information</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small mb-0 text-uppercase fw-bold">Customer Name</p>
+                                <p class="fw-semibold">{{ order.full_name }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small mb-0 text-uppercase fw-bold">Email</p>
+                                <p class="fw-semibold">{{ order.email }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small mb-0 text-uppercase fw-bold">Phone</p>
+                                <p class="fw-semibold">{{ order.phone }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <p class="text-muted small mb-0 text-uppercase fw-bold">Address</p>
+                                <p class="fw-semibold">{{ order.address }}, {{ order.city }} - {{ order.zip_code }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 mb-4" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold">Transaction Details</h5>
+                        <div class="mb-3">
+                            <p class="text-muted small mb-0 text-uppercase fw-bold">Payment Method</p>
+                            <p class="fw-semibold badge bg-light text-dark px-3 py-2 border rounded-pill">{{ payment.payment_method }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-muted small mb-0 text-uppercase fw-bold">Transaction ID</p>
+                            <p class="fw-mono fw-bold text-primary">{{ payment.transaction_id }}</p>
+                        </div>
+                        <div class="mb-0">
+                            <p class="text-muted small mb-0 text-uppercase fw-bold">Payment Status</p>
+                            <p><span class="badge {% if payment.payment_status == 'Success' %}bg-success{% else %}bg-warning{% endif %} px-3 py-2 rounded-pill">{{ payment.payment_status }}</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                    <div class="card-body p-4 text-center">
+                        <h5 class="card-title fw-bold">Update Order Status</h5>
+                        <form action="{% url 'admin_app:update_order_status' order.id %}" method="POST">
+                            {% csrf_token %}
+                            <select name="status" class="form-select mb-3 border-0 bg-light py-2 px-3 rounded-pill shadow-none">
+                                <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Processing" {% if order.status == 'Processing' %}selected{% endif %}>Processing</option>
+                                <option value="Shipped" {% if order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm" style="border-radius: 30px; background-color: #4154f1;">
+                                Update Status
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
